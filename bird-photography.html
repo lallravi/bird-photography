@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AVIAN LENS — Bird Photography</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@200;300;400;500&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0e0f0d;
+  --paper: #f4f0e8;
+  --sage: #7a8c6e;
+  --moss: #4a5c3a;
+  --dawn: #d4956a;
+  --sky: #8baab8;
+  --mist: #c8d4d8;
+  --cream: #ede8dc;
+  --gold: #c8a96e;
+  --rust: #9b4f2a;
+  --white: #fdfbf7;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--white);
+  color: var(--ink);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* CUSTOM CURSOR */
+.cursor {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: multiply;
+}
+.cursor-dot {
+  width: 8px; height: 8px;
+  background: var(--moss);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s;
+}
+.cursor-ring {
+  width: 36px; height: 36px;
+  border: 1px solid var(--sage);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: all 0.25s ease;
+  opacity: 0.7;
+}
+body:has(a:hover) .cursor-ring,
+body:has(button:hover) .cursor-ring { transform: translate(-50%, -50%) scale(1.8); opacity: 0.4; }
+
+/* NAV */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 48px;
+  mix-blend-mode: multiply;
+}
+nav.scrolled {
+  background: rgba(244,240,232,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(122,140,110,0.15);
+  mix-blend-mode: normal;
+  transition: all 0.4s ease;
+}
+.nav-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 4px;
+  color: var(--ink);
+  text-decoration: none;
+}
+.nav-logo span { color: var(--sage); }
+.nav-links {
+  display: flex;
+  gap: 40px;
+  list-style: none;
+}
+.nav-links a {
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 400;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+.nav-links a:hover { opacity: 1; }
+.nav-cta {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--white);
+  background: var(--moss);
+  padding: 10px 24px;
+  border: none;
+  cursor: none;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 400;
+  transition: background 0.25s;
+}
+.nav-cta:hover { background: var(--ink); }
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  overflow: hidden;
+}
+
+.hero-left {
+  background: var(--cream);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 120px 64px 80px;
+  position: relative;
+  z-index: 2;
+}
+.hero-eyebrow {
+  font-size: 11px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--sage);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.hero-eyebrow::before {
+  content: '';
+  width: 32px; height: 1px;
+  background: var(--sage);
+}
+.hero-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(64px, 7vw, 110px);
+  font-weight: 300;
+  line-height: 0.92;
+  color: var(--ink);
+  margin-bottom: 32px;
+}
+.hero-title em {
+  font-style: italic;
+  color: var(--moss);
+}
+.hero-desc {
+  font-size: 15px;
+  line-height: 1.8;
+  color: #5a5a52;
+  max-width: 340px;
+  margin-bottom: 48px;
+}
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--ink);
+  color: var(--white);
+  padding: 16px 36px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+.btn-primary:hover { background: var(--moss); gap: 18px; }
+.btn-primary svg { transition: transform 0.3s; }
+.btn-text {
+  font-size: 13px;
+  color: var(--sage);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s;
+}
+.btn-text:hover { border-color: var(--sage); }
+
+.hero-stats {
+  display: flex;
+  gap: 48px;
+  margin-top: 64px;
+  padding-top: 32px;
+  border-top: 1px solid rgba(122,140,110,0.2);
+}
+.stat-item { }
+.stat-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 36px;
+  font-weight: 300;
+  color: var(--ink);
+  line-height: 1;
+}
+.stat-label {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--sage);
+  margin-top: 4px;
+}
+
+.hero-right {
+  position: relative;
+  overflow: hidden;
+}
+.hero-image-grid {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px;
+}
+.hero-img {
+  overflow: hidden;
+  position: relative;
+}
+.hero-img img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 8s ease;
+  animation: kenBurns 12s ease-in-out infinite alternate;
+}
+@keyframes kenBurns {
+  from { transform: scale(1); }
+  to { transform: scale(1.08); }
+}
+.hero-img:nth-child(2) img { animation-delay: -3s; }
+.hero-img:nth-child(3) img { animation-delay: -6s; }
+.hero-img:nth-child(4) img { animation-delay: -9s; }
+.hero-img.tall { grid-row: span 2; }
+
+.hero-badge {
+  position: absolute;
+  bottom: 40px;
+  left: -20px;
+  background: var(--dawn);
+  color: var(--white);
+  padding: 20px 24px;
+  z-index: 10;
+  max-width: 180px;
+}
+.hero-badge-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 40px;
+  line-height: 1;
+}
+.hero-badge-text {
+  font-size: 11px;
+  letter-spacing: 1px;
+  opacity: 0.9;
+  margin-top: 4px;
+}
+
+/* MARQUEE */
+.marquee-section {
+  background: var(--moss);
+  padding: 16px 0;
+  overflow: hidden;
+}
+.marquee-track {
+  display: flex;
+  gap: 0;
+  animation: marquee 20s linear infinite;
+  width: max-content;
+}
+.marquee-item {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 15px;
+  letter-spacing: 3px;
+  color: var(--cream);
+  opacity: 0.7;
+  padding: 0 36px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 36px;
+}
+.marquee-item::after {
+  content: '✦';
+  font-size: 10px;
+  opacity: 0.5;
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* FEATURED SECTION */
+.section-featured {
+  padding: 120px 64px;
+  background: var(--white);
+}
+.section-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 64px;
+}
+.section-eyebrow {
+  font-size: 11px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--sage);
+  margin-bottom: 16px;
+}
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(38px,4vw,64px);
+  font-weight: 300;
+  line-height: 1.05;
+  color: var(--ink);
+}
+.section-title em { font-style: italic; color: var(--moss); }
+.section-link {
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--sage);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: gap 0.2s;
+}
+.section-link:hover { gap: 14px; }
+
+/* GALLERY GRID */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: auto;
+  gap: 12px;
+}
+.gallery-item {
+  position: relative;
+  overflow: hidden;
+  cursor: none;
+  background: var(--mist);
+}
+.gallery-item img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94);
+  filter: saturate(0.9);
+}
+.gallery-item:hover img {
+  transform: scale(1.06);
+  filter: saturate(1.1);
+}
+.gallery-item-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(14,15,13,0.75) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity 0.4s;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 24px;
+}
+.gallery-item:hover .gallery-item-overlay { opacity: 1; }
+.gallery-item-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 300;
+  color: var(--white);
+  line-height: 1.1;
+}
+.gallery-item-meta {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.6);
+  margin-top: 6px;
+}
+
+.gallery-item:nth-child(1) { grid-column: span 7; height: 480px; }
+.gallery-item:nth-child(2) { grid-column: span 5; height: 480px; }
+.gallery-item:nth-child(3) { grid-column: span 4; height: 360px; }
+.gallery-item:nth-child(4) { grid-column: span 4; height: 360px; }
+.gallery-item:nth-child(5) { grid-column: span 4; height: 360px; }
+
+/* ABOUT SPLIT */
+.section-about {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 680px;
+}
+.about-image {
+  position: relative;
+  overflow: hidden;
+  background: var(--mist);
+}
+.about-image img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  filter: saturate(0.85);
+}
+.about-image-caption {
+  position: absolute;
+  bottom: 32px;
+  right: -1px;
+  background: var(--white);
+  padding: 16px 20px;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: var(--sage);
+  text-transform: uppercase;
+}
+.about-content {
+  background: var(--cream);
+  padding: 100px 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.about-quote {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(26px,2.5vw,40px);
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.4;
+  color: var(--ink);
+  margin-bottom: 32px;
+  position: relative;
+  padding-left: 28px;
+}
+.about-quote::before {
+  content: '"';
+  position: absolute;
+  left: 0;
+  top: -8px;
+  font-size: 80px;
+  color: var(--sage);
+  opacity: 0.3;
+  line-height: 1;
+  font-family: 'Cormorant Garamond', serif;
+}
+.about-body {
+  font-size: 15px;
+  line-height: 1.9;
+  color: #5a5a52;
+  margin-bottom: 40px;
+}
+.about-author {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.author-avatar {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid var(--sage);
+}
+.author-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.author-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  font-weight: 600;
+}
+.author-role {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--sage);
+}
+
+/* CATEGORIES */
+.section-categories {
+  padding: 120px 64px;
+  background: var(--ink);
+}
+.section-categories .section-eyebrow { color: var(--sage); }
+.section-categories .section-title { color: var(--cream); }
+
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+  margin-top: 64px;
+}
+.category-card {
+  position: relative;
+  height: 440px;
+  overflow: hidden;
+  cursor: none;
+  group: true;
+}
+.category-card img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s cubic-bezier(0.25,0.46,0.45,0.94);
+  filter: brightness(0.65) saturate(0.8);
+}
+.category-card:hover img {
+  transform: scale(1.1);
+  filter: brightness(0.45) saturate(1.1);
+}
+.category-card-body {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 36px 28px;
+}
+.category-number {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 64px;
+  color: rgba(255,255,255,0.12);
+  line-height: 1;
+  transition: color 0.4s;
+}
+.category-card:hover .category-number { color: rgba(255,255,255,0.22); }
+.category-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px;
+  font-weight: 300;
+  color: var(--white);
+  line-height: 1.1;
+  margin-bottom: 8px;
+}
+.category-count {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  transition: color 0.3s;
+}
+.category-card:hover .category-count { color: var(--dawn); }
+.category-arrow {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  width: 40px; height: 40px;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0;
+  transform: scale(0.7);
+  transition: all 0.3s;
+  color: white;
+  font-size: 16px;
+}
+.category-card:hover .category-arrow { opacity: 1; transform: scale(1); }
+
+/* PROCESS */
+.section-process {
+  padding: 120px 64px;
+  background: var(--cream);
+}
+.process-grid {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 1px;
+  margin-top: 64px;
+  border: 1px solid rgba(122,140,110,0.2);
+}
+.process-step {
+  padding: 48px 36px;
+  border-right: 1px solid rgba(122,140,110,0.2);
+  background: var(--cream);
+  transition: background 0.3s;
+}
+.process-step:last-child { border-right: none; }
+.process-step:hover { background: var(--white); }
+.process-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 80px;
+  color: rgba(122,140,110,0.15);
+  line-height: 0.9;
+  margin-bottom: 24px;
+}
+.process-icon {
+  font-size: 28px;
+  margin-bottom: 16px;
+}
+.process-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+.process-desc {
+  font-size: 14px;
+  line-height: 1.8;
+  color: #6a6a60;
+}
+
+/* TESTIMONIALS */
+.section-testimonials {
+  padding: 120px 64px;
+  background: var(--white);
+}
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 24px;
+  margin-top: 64px;
+}
+.testimonial-card {
+  background: var(--cream);
+  padding: 40px;
+  border-left: 3px solid var(--sage);
+  transition: border-color 0.3s, transform 0.3s;
+}
+.testimonial-card:hover { border-color: var(--dawn); transform: translateY(-4px); }
+.testimonial-stars { color: var(--gold); font-size: 14px; letter-spacing: 2px; margin-bottom: 20px; }
+.testimonial-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1.7;
+  color: var(--ink);
+  margin-bottom: 28px;
+}
+.testimonial-author { display: flex; align-items: center; gap: 14px; }
+.testimonial-avatar {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--mist);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+}
+.testimonial-name { font-size: 14px; font-weight: 500; color: var(--ink); }
+.testimonial-location { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--sage); }
+
+/* PACKAGES */
+.section-packages {
+  padding: 120px 64px;
+  background: var(--paper);
+}
+.packages-grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 2px;
+  margin-top: 64px;
+}
+.package-card {
+  background: var(--white);
+  padding: 56px 40px;
+  position: relative;
+  border-bottom: 3px solid transparent;
+  transition: border-color 0.3s;
+}
+.package-card:hover { border-color: var(--moss); }
+.package-card.featured {
+  background: var(--moss);
+  border-bottom-color: var(--dawn);
+}
+.package-tag {
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--dawn);
+  margin-bottom: 24px;
+  display: block;
+}
+.package-card.featured .package-tag { color: rgba(255,255,255,0.6); }
+.package-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 32px;
+  font-weight: 300;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.package-card.featured .package-name { color: var(--cream); }
+.package-price {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 56px;
+  color: var(--moss);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.package-card.featured .package-price { color: var(--dawn); }
+.package-period {
+  font-size: 12px;
+  color: var(--sage);
+  margin-bottom: 40px;
+}
+.package-card.featured .package-period { color: rgba(255,255,255,0.5); }
+.package-features {
+  list-style: none;
+  margin-bottom: 40px;
+}
+.package-features li {
+  font-size: 14px;
+  line-height: 2;
+  color: #5a5a52;
+  padding-left: 20px;
+  position: relative;
+}
+.package-card.featured .package-features li { color: rgba(255,255,255,0.7); }
+.package-features li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: var(--sage);
+}
+.package-card.featured .package-features li::before { color: var(--dawn); }
+.btn-package {
+  display: block;
+  text-align: center;
+  padding: 14px;
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transition: all 0.3s;
+}
+.btn-package:hover { background: var(--ink); color: var(--white); }
+.package-card.featured .btn-package {
+  border-color: var(--dawn);
+  color: var(--dawn);
+  background: transparent;
+}
+.package-card.featured .btn-package:hover {
+  background: var(--dawn);
+  color: var(--white);
+}
+
+/* INSTAGRAM GRID */
+.section-instagram {
+  padding: 80px 0 0;
+  background: var(--white);
+  text-align: center;
+}
+.instagram-header { padding: 0 64px 64px; }
+.instagram-grid {
+  display: grid;
+  grid-template-columns: repeat(6,1fr);
+  gap: 3px;
+}
+.insta-item {
+  aspect-ratio: 1;
+  overflow: hidden;
+  position: relative;
+  cursor: none;
+  background: var(--mist);
+}
+.insta-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s; filter: saturate(0.85); }
+.insta-item:hover img { transform: scale(1.1); filter: saturate(1.2); }
+.insta-overlay {
+  position: absolute; inset: 0;
+  background: rgba(74,92,58,0.8);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity 0.3s;
+  font-size: 24px; color: white;
+}
+.insta-item:hover .insta-overlay { opacity: 1; }
+
+/* FOOTER */
+footer {
+  background: var(--ink);
+  color: var(--cream);
+  padding: 80px 64px 40px;
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 64px;
+  margin-bottom: 64px;
+}
+.footer-brand { }
+.footer-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  letter-spacing: 6px;
+  color: var(--cream);
+  margin-bottom: 16px;
+}
+.footer-logo span { color: var(--sage); }
+.footer-tagline {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
+  font-style: italic;
+  color: rgba(212,200,172,0.6);
+  line-height: 1.7;
+  margin-bottom: 28px;
+}
+.footer-social {
+  display: flex;
+  gap: 14px;
+}
+.social-link {
+  width: 38px; height: 38px;
+  border: 1px solid rgba(255,255,255,0.15);
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  font-size: 14px;
+  transition: all 0.25s;
+}
+.social-link:hover { border-color: var(--sage); color: var(--sage); }
+.footer-col h4 {
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--sage);
+  margin-bottom: 24px;
+}
+.footer-col ul { list-style: none; }
+.footer-col ul li { margin-bottom: 12px; }
+.footer-col ul li a {
+  font-size: 14px;
+  color: rgba(212,200,172,0.6);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.footer-col ul li a:hover { color: var(--cream); }
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding-top: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: rgba(255,255,255,0.3);
+}
+
+/* SCROLL REVEAL */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.reveal.visible { opacity: 1; transform: none; }
+
+/* MOBILE */
+@media(max-width:900px){
+  .hero { grid-template-columns: 1fr; }
+  .hero-right { display: none; }
+  .hero-left { min-height: 100vh; }
+  nav { padding: 20px 24px; }
+  .nav-links, .nav-cta { display: none; }
+  .section-featured, .section-about, .section-categories,
+  .section-process, .section-testimonials, .section-packages, footer { padding: 60px 24px; }
+  .gallery-grid, .categories-grid, .packages-grid, .testimonials-grid,
+  .process-grid, .instagram-grid, .footer-grid { grid-template-columns: 1fr; }
+  .gallery-item { grid-column: span 12 !important; height: 280px !important; }
+  .section-about { grid-template-columns: 1fr; }
+  .instagram-grid { grid-template-columns: repeat(3,1fr); }
+  .section-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div class="cursor cursor-dot" id="cursorDot"></div>
+<div class="cursor cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <a href="#" class="nav-logo">AVIAN<span>·</span>LENS</a>
+  <ul class="nav-links">
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#categories">Species</a></li>
+    <li><a href="#packages">Prints</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="nav-cta">Book a Session</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left reveal">
+    <div class="hero-eyebrow">Fine Art Bird Photography</div>
+    <h1 class="hero-title">
+      Where<br><em>Wings</em><br>Meet<br>Light
+    </h1>
+    <p class="hero-desc">Intimate portraits of avian life — captured in wild habitats across six continents. Every frame is a meditation on stillness and flight.</p>
+    <div class="hero-actions">
+      <a href="#gallery" class="btn-primary">
+        Explore Gallery
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a href="#about" class="btn-text">Our Story</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num">847</div>
+        <div class="stat-label">Species Shot</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">62</div>
+        <div class="stat-label">Countries</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">14K+</div>
+        <div class="stat-label">Prints Sold</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-image-grid">
+      <div class="hero-img tall">
+        <img src="https://images.unsplash.com/photo-1444464666168-49d633b86797?w=600&q=80" alt="Bald Eagle in flight">
+      </div>
+      <div class="hero-img">
+        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80" alt="Puffin">
+      </div>
+      <div class="hero-img">
+        <img src="https://images.unsplash.com/photo-1552728089-57bdde30beb3?w=400&q=80" alt="Kingfisher">
+      </div>
+    </div>
+    <div class="hero-badge">
+      <div class="hero-badge-num">2024</div>
+      <div class="hero-badge-text">Wildlife Photographer of the Year</div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-section">
+  <div class="marquee-track">
+    <div class="marquee-item">Raptors</div>
+    <div class="marquee-item">Shorebirds</div>
+    <div class="marquee-item">Warblers</div>
+    <div class="marquee-item">Owls</div>
+    <div class="marquee-item">Herons</div>
+    <div class="marquee-item">Kingfishers</div>
+    <div class="marquee-item">Pelicans</div>
+    <div class="marquee-item">Flamingos</div>
+    <div class="marquee-item">Raptors</div>
+    <div class="marquee-item">Shorebirds</div>
+    <div class="marquee-item">Warblers</div>
+    <div class="marquee-item">Owls</div>
+    <div class="marquee-item">Herons</div>
+    <div class="marquee-item">Kingfishers</div>
+    <div class="marquee-item">Pelicans</div>
+    <div class="marquee-item">Flamingos</div>
+  </div>
+</div>
+
+<!-- FEATURED GALLERY -->
+<section class="section-featured" id="gallery">
+  <div class="section-header reveal">
+    <div>
+      <div class="section-eyebrow">Featured Works</div>
+      <h2 class="section-title">Recent<br><em>Captures</em></h2>
+    </div>
+    <a href="#" class="section-link">View Full Gallery →</a>
+  </div>
+  <div class="gallery-grid reveal">
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1509099836639-18ba1795216d?w=800&q=80" alt="Great Blue Heron">
+      <div class="gallery-item-overlay">
+        <div class="gallery-item-name">Great Blue Heron</div>
+        <div class="gallery-item-meta">Everglades, Florida · 2024</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1555169062-013468b47731?w=600&q=80" alt="Snowy Owl">
+      <div class="gallery-item-overlay">
+        <div class="gallery-item-name">Snowy Owl</div>
+        <div class="gallery-item-meta">Tundra, Canada · 2024</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1449034446853-66c86144b0ad?w=600&q=80" alt="Atlantic Puffin">
+      <div class="gallery-item-overlay">
+        <div class="gallery-item-name">Atlantic Puffin</div>
+        <div class="gallery-item-meta">Iceland · 2023</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1470114716159-e389f8712fda?w=600&q=80" alt="Red Kite">
+      <div class="gallery-item-overlay">
+        <div class="gallery-item-name">Red Kite</div>
+        <div class="gallery-item-meta">Welsh Hills, UK · 2024</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=600&q=80" alt="Flamingos">
+      <div class="gallery-item-overlay">
+        <div class="gallery-item-name">Flamingo Colony</div>
+        <div class="gallery-item-meta">Camargue, France · 2023</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="section-about" id="about">
+  <div class="about-image">
+    <img src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=800&q=80" alt="Photographer in field">
+    <div class="about-image-caption">In the field, Scottish Highlands</div>
+  </div>
+  <div class="about-content reveal">
+    <div class="section-eyebrow">Our Philosophy</div>
+    <blockquote class="about-quote">
+      A bird in flight is the universe's most perfect metaphor for freedom.
+    </blockquote>
+    <p class="about-body">
+      For over fifteen years, we've dedicated ourselves to the patient, respectful pursuit of avian subjects in their natural environments. No bait. No captive birds. No compromises. Just quiet presence, deep knowledge of behavior, and an obsession with light.
+      <br><br>
+      Every photograph in our collection is a genuine wild encounter — the result of days, sometimes weeks, of waiting for one perfect moment when all the elements align.
+    </p>
+    <div class="about-author">
+      <div class="author-avatar">
+        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&q=80" alt="Elara Wren">
+      </div>
+      <div>
+        <div class="author-name">Elara Wren</div>
+        <div class="author-role">Lead Photographer & Ornithologist</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CATEGORIES -->
+<section class="section-categories" id="categories">
+  <div class="section-header reveal">
+    <div>
+      <div class="section-eyebrow">By Species</div>
+      <h2 class="section-title" style="color:var(--cream)">Explore<br><em>by Family</em></h2>
+    </div>
+    <a href="#" class="section-link" style="color:var(--sage)">All Species →</a>
+  </div>
+  <div class="categories-grid reveal">
+    <div class="category-card">
+      <img src="https://images.unsplash.com/photo-1444464666168-49d633b86797?w=500&q=80" alt="Raptors">
+      <div class="category-card-body">
+        <div class="category-number">01</div>
+        <div class="category-name">Raptors &<br>Eagles</div>
+        <div class="category-count">124 Photographs</div>
+      </div>
+      <div class="category-arrow">→</div>
+    </div>
+    <div class="category-card">
+      <img src="https://images.unsplash.com/photo-1559715541-d4fc97b8d6dd?w=500&q=80" alt="Shorebirds">
+      <div class="category-card-body">
+        <div class="category-number">02</div>
+        <div class="category-name">Waders &<br>Shorebirds</div>
+        <div class="category-count">98 Photographs</div>
+      </div>
+      <div class="category-arrow">→</div>
+    </div>
+    <div class="category-card">
+      <img src="https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?w=500&q=80" alt="Owls">
+      <div class="category-card-body">
+        <div class="category-number">03</div>
+        <div class="category-name">Owls &<br>Nightjars</div>
+        <div class="category-count">67 Photographs</div>
+      </div>
+      <div class="category-arrow">→</div>
+    </div>
+    <div class="category-card">
+      <img src="https://images.unsplash.com/photo-1552728089-57bdde30beb3?w=500&q=80" alt="Kingfishers">
+      <div class="category-card-body">
+        <div class="category-number">04</div>
+        <div class="category-name">Kingfishers<br>& Rollers</div>
+        <div class="category-count">83 Photographs</div>
+      </div>
+      <div class="category-arrow">→</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="section-process">
+  <div class="section-header reveal">
+    <div>
+      <div class="section-eyebrow">How We Work</div>
+      <h2 class="section-title">The<br><em>Process</em></h2>
+    </div>
+  </div>
+  <div class="process-grid reveal">
+    <div class="process-step">
+      <div class="process-num">01</div>
+      <div class="process-icon">🔍</div>
+      <div class="process-title">Research & Scout</div>
+      <p class="process-desc">Months of habitat study, migration mapping, and behavior research before a single frame is captured.</p>
+    </div>
+    <div class="process-step">
+      <div class="process-num">02</div>
+      <div class="process-icon">🌅</div>
+      <div class="process-title">Golden Hour Wait</div>
+      <p class="process-desc">We arrive before dawn and stay past dusk. The best bird light lasts just minutes — we're there for every one.</p>
+    </div>
+    <div class="process-step">
+      <div class="process-num">03</div>
+      <div class="process-icon">📷</div>
+      <div class="process-title">The Capture</div>
+      <p class="process-desc">Using telephoto lenses from respectful distances. We never disturb nesting birds or alter behavior.</p>
+    </div>
+    <div class="process-step">
+      <div class="process-num">04</div>
+      <div class="process-icon">🖨️</div>
+      <div class="process-title">Fine Art Print</div>
+      <p class="process-desc">Archival Giclée prints on Hahnemühle Photo Rag — museum quality that will outlast a lifetime.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section-testimonials">
+  <div class="section-header reveal">
+    <div>
+      <div class="section-eyebrow">Collectors Say</div>
+      <h2 class="section-title">Voices from<br><em>Our Community</em></h2>
+    </div>
+  </div>
+  <div class="testimonials-grid reveal">
+    <div class="testimonial-card">
+      <div class="testimonial-stars">★★★★★</div>
+      <p class="testimonial-text">"The Snowy Owl print has become the heart of our living room. Every guest asks about it. The depth in those eyes is extraordinary — you feel you're actually in the field."</p>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar">🦅</div>
+        <div>
+          <div class="testimonial-name">Margaret Holloway</div>
+          <div class="testimonial-location">London, UK</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="testimonial-stars">★★★★★</div>
+      <p class="testimonial-text">"I've collected wildlife photography for twenty years. Avian Lens stands apart — the patience and technical mastery in each image is immediately evident. Worth every penny."</p>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar">🌿</div>
+        <div>
+          <div class="testimonial-name">Dr. James Okafor</div>
+          <div class="testimonial-location">Lagos, Nigeria</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="testimonial-stars">★★★★★</div>
+      <p class="testimonial-text">"Received my Kingfisher triptych — the color accuracy and print quality are flawless. The custom framing service made it effortless. This is what fine art photography should be."</p>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar">🦜</div>
+        <div>
+          <div class="testimonial-name">Yuki Tanaka</div>
+          <div class="testimonial-location">Kyoto, Japan</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PACKAGES -->
+<section class="section-packages" id="packages">
+  <div class="section-header reveal">
+    <div>
+      <div class="section-eyebrow">Fine Art Prints</div>
+      <h2 class="section-title">Own a<br><em>Piece</em></h2>
+    </div>
+  </div>
+  <div class="packages-grid reveal">
+    <div class="package-card">
+      <span class="package-tag">Entry Collection</span>
+      <div class="package-name">Field Notes</div>
+      <div class="package-price">$180</div>
+      <div class="package-period">40×30cm · Open Edition</div>
+      <ul class="package-features">
+        <li>Archival Giclée print</li>
+        <li>Hahnemühle Photo Rag 308gsm</li>
+        <li>Certificate of authenticity</li>
+        <li>Unframed (frame guide included)</li>
+        <li>Free worldwide shipping</li>
+      </ul>
+      <a href="#" class="btn-package">Add to Cart</a>
+    </div>
+    <div class="package-card featured">
+      <span class="package-tag">Most Collected</span>
+      <div class="package-name">Collector's Edition</div>
+      <div class="package-price">$480</div>
+      <div class="package-period">60×45cm · Limited to 50</div>
+      <ul class="package-features">
+        <li>Archival Giclée print</li>
+        <li>Hahnemühle German Etching</li>
+        <li>Hand-signed & numbered</li>
+        <li>Solid oak frame included</li>
+        <li>Exhibition documentation</li>
+      </ul>
+      <a href="#" class="btn-package">Add to Cart</a>
+    </div>
+    <div class="package-card">
+      <span class="package-tag">Museum Grade</span>
+      <div class="package-name">Masterwork</div>
+      <div class="package-price">$1,200</div>
+      <div class="package-period">100×75cm · Edition of 10</div>
+      <ul class="package-features">
+        <li>Gallery-quality large format</li>
+        <li>Dibond aluminium mounting</li>
+        <li>Artist's proof & provenance</li>
+        <li>White glove installation</li>
+        <li>Investment documentation</li>
+      </ul>
+      <a href="#" class="btn-package">Enquire</a>
+    </div>
+  </div>
+</section>
+
+<!-- INSTAGRAM -->
+<section class="section-instagram">
+  <div class="instagram-header reveal">
+    <div class="section-eyebrow">Follow the Journey</div>
+    <h2 class="section-title">@avianlens</h2>
+  </div>
+  <div class="instagram-grid">
+    <div class="insta-item"><img src="https://images.unsplash.com/photo-1444464666168-49d633b86797?w=300&q=70" alt=""><div class="insta-overlay">♡</div></div>
+    <div class="insta-item"><img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300&q=70" alt=""><div class="insta-overlay">♡</div></div>
+    <div class="insta-item"><img src="https://images.unsplash.com/photo-1509099836639-18ba1795216d?w=300&q=70" alt=""><div class="insta-overlay">♡</div></div>
+    <div class="insta-item"><img src="https://images.unsplash.com/photo-1552728089-57bdde30beb3?w=300&q=70" alt=""><div class="insta-overlay">♡</div></div>
+    <div class="insta-item"><img src="https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=300&q=70" alt=""><div class="insta-overlay">♡</div></div>
+    <div class="insta-item"><img src="https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?w=300&q=70" alt=""><div class="insta-overlay">♡</div></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="contact">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="footer-logo">AVIAN<span>·</span>LENS</div>
+      <p class="footer-tagline">"In pursuit of light, feather, and the perfect moment — from the arctic tundra to the tropical canopy."</p>
+      <div class="footer-social">
+        <a href="#" class="social-link">ig</a>
+        <a href="#" class="social-link">tw</a>
+        <a href="#" class="social-link">fb</a>
+        <a href="#" class="social-link">yt</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Gallery</h4>
+      <ul>
+        <li><a href="#">Featured Works</a></li>
+        <li><a href="#">Raptors & Eagles</a></li>
+        <li><a href="#">Owls</a></li>
+        <li><a href="#">Shorebirds</a></li>
+        <li><a href="#">New Arrivals</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Studio</h4>
+      <ul>
+        <li><a href="#">About Elara</a></li>
+        <li><a href="#">Our Process</a></li>
+        <li><a href="#">Expeditions</a></li>
+        <li><a href="#">Workshops</a></li>
+        <li><a href="#">Press</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Prints</h4>
+      <ul>
+        <li><a href="#">Shop All</a></li>
+        <li><a href="#">Limited Editions</a></li>
+        <li><a href="#">Custom Orders</a></li>
+        <li><a href="#">Framing Guide</a></li>
+        <li><a href="#">Gift Certificates</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div>© 2024 Avian Lens Studio. All rights reserved.</div>
+    <div>Captured ethically · Printed sustainably · Shipped worldwide</div>
+  </div>
+</footer>
+
+<script>
+// CURSOR
+const dot = document.getElementById('cursorDot');
+const ring = document.getElementById('cursorRing');
+document.addEventListener('mousemove', e => {
+  dot.style.left = e.clientX + 'px';
+  dot.style.top = e.clientY + 'px';
+  setTimeout(() => {
+    ring.style.left = e.clientX + 'px';
+    ring.style.top = e.clientY + 'px';
+  }, 60);
+});
+
+// NAV SCROLL
+const nav = document.getElementById('mainNav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// SCROLL REVEAL
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if(e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+    }
+  });
+}, { threshold: 0.08 });
+reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
